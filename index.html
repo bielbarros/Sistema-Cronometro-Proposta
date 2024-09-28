@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronômetro de Proposta</title>
+    <!-- Inclui o Boxicons CDN -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-image: url('img/Fundo.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+
+        h1 {
+            color: #ffffff; 
+            z-index: 1;
+            position: relative;
+        }
+
+        p {
+            color: #FFFFFF;
+            font-size: 22px;
+            z-index: 1;
+            position: relative;
+        }
+
+        #countdown {
+            font-size: 48px;
+            color: #ffffff; 
+            z-index: 1;
+            position: relative;
+        }
+
+        #contact {
+            margin-top: 20px;
+            z-index: 1;
+            position: relative;
+        }
+
+        .whatsapp-link {
+            display: inline-block;
+            background-color: #25D366;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 18px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .whatsapp-link:hover {
+            background-color: #128C7E;
+            transform: scale(1.05);
+        }
+
+        /* Estilo do ícone do WhatsApp */
+        .whatsapp-link i {
+            margin-right: 8px; /* Espaçamento entre o ícone e o texto */
+            font-size: 38px; /* Tamanho do ícone */
+            vertical-align: middle;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            z-index: 1;
+            position: relative;
+        }
+
+        .logo {
+            max-width: 700px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                margin: 0;
+            }
+
+            #countdown {
+                font-size: 36px;
+            }
+
+            .logo {
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <img src="img/logo.png" alt="Logo" class="logo">
+    </div>
+    <h1>Proposta válida por apenas 48 Horas!!</h1>
+    <div id="countdown"></div>
+    <div id="contact">
+        <p>Para aceitar a proposta, entre em contato via WhatsApp pelo botão abaixo:</p>
+        <a href="https://wa.me/5527996107474?text=Olá,%20quero%20aceitar%20a%20proposta!" class="whatsapp-link" target="_blank">
+            <i class='bx bxl-whatsapp'></i> Aceitar Proposta
+        </a>
+    </div>
+    <script>
+        const proposalDuration = 48 * 60 * 60 * 1000; // 48 horas em milissegundos
+        let endDate;
+
+        // Verifica se já existe uma data de término armazenada
+        const storedEndDate = localStorage.getItem('endDate');
+        if (storedEndDate) {
+            endDate = new Date(storedEndDate);
+        } else {
+            const startDate = new Date(); // Data atual
+            endDate = new Date(startDate.getTime() + proposalDuration); // Data de término
+            localStorage.setItem('endDate', endDate); // Armazena a data de término
+        }
+
+        const countdownElement = document.getElementById('countdown');
+
+        function updateCountdown() {
+            const now = new Date(); // Data e hora atual
+            const timeRemaining = endDate - now; // Tempo restante
+
+            if (timeRemaining <= 0) {
+                countdownElement.innerHTML = "Proposta expirada!";
+                clearInterval(interval);
+                localStorage.removeItem('endDate'); // Remove a data de término quando expirar
+                return;
+            }
+
+            const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 48)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+            countdownElement.innerHTML = `${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        const interval = setInterval(updateCountdown, 1000);
+        updateCountdown(); // Chama uma vez para evitar atraso
+    </script>
+</body>
+</html>
